@@ -11,6 +11,14 @@ export default function VideoIntro({ onComplete }: VideoIntroProps) {
   const [hasEnded, setHasEnded] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
 
+  const baseUrl = import.meta.env.BASE_URL || './';
+  const videoSrcs = [
+    `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}portfolio-video.mp4`,
+    './portfolio-video.mp4',
+    '/portfolio-video.mp4',
+    'portfolio-video.mp4'
+  ];
+
   useEffect(() => {
     // Lock body scrolling while video is playing
     const originalOverflow = document.body.style.overflow;
@@ -18,9 +26,12 @@ export default function VideoIntro({ onComplete }: VideoIntroProps) {
 
     if (videoRef.current) {
       videoRef.current.muted = true;
-      videoRef.current.play().catch((err) => {
-        console.log('Autoplay attempted:', err);
-      });
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.log('Autoplay deferred by browser:', err);
+        });
+      }
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -64,20 +75,21 @@ export default function VideoIntro({ onComplete }: VideoIntroProps) {
       className="fixed inset-0 z-[10000] bg-black flex items-center justify-center overflow-hidden"
       onWheel={(e) => e.stopPropagation()}
     >
-      {/* Video element */}
+      {/* Video element with multiple fallback sources */}
       <video
         ref={videoRef}
-        src={`${import.meta.env.BASE_URL}portfolio-video.mp4`}
         autoPlay
         muted
         playsInline
+        preload="auto"
         onEnded={handleEnded}
-        onError={() => {
-          console.error('Video error, proceeding to home');
-          onComplete();
-        }}
         className="w-full h-full object-contain md:object-cover"
-      />
+      >
+        {videoSrcs.map((src, idx) => (
+          <source key={idx} src={src} type="video/mp4" />
+        ))}
+        Your browser does not support HTML5 video.
+      </video>
 
       {/* Subtle overlay gradient */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40 pointer-events-none" />
@@ -108,23 +120,20 @@ export default function VideoIntro({ onComplete }: VideoIntroProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.5, type: 'spring', stiffness: 200 }}
-            className="absolute bottom-16 z-50 flex flex-wrap items-center justify-center gap-4 px-4"
+            className="absolute bottom-12 z-50 flex flex-col sm:flex-row items-center gap-4 px-4"
           >
             <button
               onClick={handleReplay}
-              className="glass px-6 py-4 rounded-2xl font-outfit text-base font-bold text-white uppercase tracking-wider transition-all duration-300 flex items-center gap-2 hover:scale-105 active:scale-95 border border-white/20 hover:bg-white/15 shadow-[0_0_20px_rgba(255,255,255,0.1)] backdrop-blur-md"
+              className="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-mono text-sm font-semibold transition-all backdrop-blur-md border border-white/20 flex items-center gap-2.5 hover:scale-105 active:scale-95"
             >
-              <FiRotateCcw size={18} className="text-primary" /> Replay
+              <FiRotateCcw size={16} /> Replay Intro
             </button>
 
             <button
               onClick={onComplete}
-              className="px-8 py-4 rounded-2xl font-outfit text-base md:text-lg font-bold text-white uppercase tracking-wider transition-all duration-300 shadow-[0_0_40px_rgba(0,245,255,0.6)] flex items-center gap-3 hover:scale-105 active:scale-95"
-              style={{
-                background: 'linear-gradient(135deg, #00F5FF, #6E00FF)',
-              }}
+              className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-[#00F5FF] to-[#6E00FF] text-white font-mono text-sm font-bold transition-all shadow-[0_0_30px_rgba(0,245,255,0.4)] flex items-center gap-2.5 hover:scale-105 active:scale-95"
             >
-              Go to Home Page <FiArrowRight size={20} />
+              Explore Portfolio <FiArrowRight size={18} />
             </button>
           </motion.div>
         )}
