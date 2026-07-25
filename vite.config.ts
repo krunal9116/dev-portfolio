@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
+  base: './', // Ensures relative asset loading for GitHub Pages (.github.io) and Vercel
   plugins: [react()],
   optimizeDeps: {
     include: ['three', '@react-three/fiber', '@react-three/drei'],
@@ -21,4 +22,3 @@ export default defineConfig({
     },
   },
 })
-
