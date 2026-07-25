@@ -100,12 +100,24 @@ function CertModal({ cert, onClose }: { cert: ParsedCert; onClose: () => void })
   const [isZoomed, setIsZoomed] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Lock background scroll when modal is open
+  // Lock background scroll when modal is open & handle ESC key
   useEffect(() => {
     const original = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = original; };
-  }, []);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = original;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
 
   return (
     <motion.div

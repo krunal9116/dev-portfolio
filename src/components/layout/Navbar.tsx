@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { navItems, socialLinks, personalInfo } from '../../constants/data';
+import { navItems, socialLinks } from '../../constants/data';
 import { scrollTo } from '../../hooks/useLenis';
 import { FiGithub, FiLinkedin, FiMail, FiMenu, FiX } from 'react-icons/fi';
+
+import ResumeModal from '../ui/ResumeModal';
 
 const iconMap: Record<string, React.ReactNode> = {
   FiGithub: <FiGithub />, FiLinkedin: <FiLinkedin />, FiMail: <FiMail />,
@@ -11,6 +13,7 @@ const iconMap: Record<string, React.ReactNode> = {
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [resumeOpen, setResumeOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -20,6 +23,10 @@ export default function Navbar() {
 
   const handleNav = (href: string) => {
     setMenuOpen(false);
+    if (href === '#resume') {
+      setResumeOpen(true);
+      return;
+    }
     setTimeout(() => scrollTo(href), 50);
   };
 
@@ -37,9 +44,9 @@ export default function Navbar() {
           {/* Logo */}
           <motion.button
             onClick={() => scrollTo(0)}
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
-            className="font-clash text-xl font-bold gradient-text tracking-tight flex items-center gap-2"
+            className="font-clash text-xl font-bold gradient-text tracking-tight flex items-center gap-2 outline-none focus:outline-none focus:ring-0 focus-visible:outline-none select-none"
           >
             &lt;Krunal /&gt;
           </motion.button>
@@ -52,8 +59,10 @@ export default function Navbar() {
                 onClick={() => handleNav(item.href)}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * i + 0.3 }}
-                className="text-muted hover:text-white text-sm font-medium transition-colors duration-300 animated-underline"
+                whileHover={{ scale: 1.25, color: '#00F5FF', y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2, delay: 0.05 * i }}
+                className="text-muted hover:text-[#00F5FF] text-sm font-medium transition-colors duration-300 animated-underline outline-none focus:outline-none focus:ring-0 focus-visible:outline-none select-none"
               >
                 {item.label}
               </motion.button>
@@ -68,8 +77,8 @@ export default function Navbar() {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.2, color: '#00F5FF' }}
-                className="text-muted transition-colors duration-300"
+                whileHover={{ scale: 1.25, color: '#00F5FF' }}
+                className="text-muted transition-colors duration-300 outline-none focus:outline-none focus:ring-0 focus-visible:outline-none select-none"
                 title={link.name}
               >
                 <span className="text-[22px]">{iconMap[link.icon]}</span>
@@ -79,7 +88,7 @@ export default function Navbar() {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden text-white p-2"
+            className="md:hidden text-white p-2 outline-none focus:outline-none focus:ring-0 focus-visible:outline-none select-none"
             onClick={() => setMenuOpen((o) => !o)}
             aria-label="Toggle menu"
           >
@@ -99,13 +108,15 @@ export default function Navbar() {
             className="fixed inset-0 z-40 glass flex flex-col items-center justify-center gap-8 md:hidden"
           >
             {navItems.map((item) => (
-              <button
+              <motion.button
                 key={item.label}
                 onClick={() => handleNav(item.href)}
-                className="font-clash text-3xl font-semibold text-white hover:text-primary transition-colors"
+                whileHover={{ scale: 1.25, color: '#00F5FF' }}
+                whileTap={{ scale: 0.95 }}
+                className="font-clash text-3xl font-semibold text-white hover:text-[#00F5FF] transition-colors outline-none focus:outline-none focus:ring-0 focus-visible:outline-none select-none"
               >
                 {item.label}
-              </button>
+              </motion.button>
             ))}
             <div className="flex gap-6 mt-4">
               {socialLinks.map((link) => (
@@ -117,6 +128,9 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Resume Modal with LiquidEther & 4-Direction 4-Color Animations */}
+      <ResumeModal isOpen={resumeOpen} onClose={() => setResumeOpen(false)} />
     </>
   );
 }
