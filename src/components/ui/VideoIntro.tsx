@@ -67,7 +67,7 @@ export default function VideoIntro({ onComplete }: VideoIntroProps) {
       {/* Video element */}
       <video
         ref={videoRef}
-        src="/portfolio-video.mp4"
+        src={`${import.meta.env.BASE_URL}portfolio-video.mp4`}
         autoPlay
         muted
         playsInline

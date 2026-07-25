@@ -14,7 +14,15 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
   const [imgError, setImgError] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const RESUME_PATHS = ['/resume.jpg', '/resume.jpeg', '/resume.png', '/resume.pdf'];
+  const baseUrl = import.meta.env.BASE_URL || './';
+  const RESUME_PATHS = [
+    `${baseUrl}resume.jpg`,
+    `${baseUrl}resume.jpeg`,
+    `${baseUrl}resume.png`,
+    `${baseUrl}resume.pdf`,
+    './resume.jpg',
+    'resume.jpg'
+  ];
   const [pathIdx, setPathIdx] = useState(0);
 
   // Lock background scroll when open & handle ESC key
