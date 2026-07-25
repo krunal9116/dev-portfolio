@@ -1,0 +1,292 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Variables ─── */
+:root {
+  --bg: #050816;
+  --primary: #00F5FF;
+  --secondary: #6E00FF;
+  --accent: #FF00AA;
+  --text: #FFFFFF;
+  --muted: #B3B3B3;
+  --glass: rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.08);
+}
+
+/* ─── Reset & Base ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: auto; /* Lenis handles this */ }
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+  cursor: none; /* Custom cursor */
+}
+
+/* ─── Custom Cursor ─── */
+#cursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 12px; height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999999;
+  box-shadow: 0 0 10px rgba(0,0,0,0.8);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  transform: translate(-50%, -50%);
+}
+#cursor-trail {
+  position: fixed;
+  top: 0; left: 0;
+  width: 36px; height: 36px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999998;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5), inset 0 0 5px rgba(0,0,0,0.2);
+  transform: translate(-50%, -50%);
+  transition: transform 0.35s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease, background 0.3s ease;
+}
+body:hover #cursor { opacity: 1; }
+.magnetic:hover ~ #cursor,
+a:hover ~ #cursor,
+button:hover ~ #cursor { transform: translate(-50%, -50%) scale(2.5); }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 2px; }
+
+/* ─── Typography ─── */
+h1, h2, h3, h4 {
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+code, pre, .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ─── Glassmorphism ─── */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+}
+.glass-primary {
+  background: rgba(0,245,255,0.04);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0,245,255,0.12);
+}
+.glass-secondary {
+  background: rgba(110,0,255,0.06);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(110,0,255,0.15);
+}
+
+/* ─── Glow Utilities ─── */
+.glow-primary { box-shadow: 0 0 20px rgba(0,245,255,0.4), 0 0 60px rgba(0,245,255,0.15); }
+.glow-secondary { box-shadow: 0 0 20px rgba(110,0,255,0.4), 0 0 60px rgba(110,0,255,0.15); }
+.glow-accent { box-shadow: 0 0 20px rgba(255,0,170,0.4), 0 0 60px rgba(255,0,170,0.15); }
+.text-glow-primary { text-shadow: 0 0 20px rgba(0,245,255,0.6); }
+.text-glow-secondary { text-shadow: 0 0 20px rgba(110,0,255,0.6); }
+
+/* ─── Gradient Text ─── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.gradient-text-accent {
+  background: linear-gradient(135deg, var(--accent), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Section Base ─── */
+.section {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+.section-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 5rem 2rem;
+}
+
+/* ─── Noise Texture ─── */
+.noise::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Grid Background ─── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ─── Animated Underline ─── */
+.animated-underline {
+  position: relative;
+}
+.animated-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transition: width 0.4s ease;
+}
+.animated-underline:hover::after { width: 100%; }
+
+/* ─── Loading Screen ─── */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* ─── Progress Bar ─── */
+.progress-bar {
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+  background-size: 200%;
+  animation: shimmer 1.5s linear infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ─── Floating animation ─── */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.animate-float { animation: float 5s ease-in-out infinite; }
+.animate-float-slow { animation: float 8s ease-in-out infinite; }
+.animate-float-fast { animation: float 3s ease-in-out infinite; }
+
+/* ─── Pulse Animation ─── */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.1); }
+}
+.animate-pulse-slow { animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+
+/* ─── Timeline ─── */
+.timeline-line {
+  width: 2px;
+  background: linear-gradient(to bottom, var(--primary), var(--secondary), transparent);
+}
+
+/* ─── Terminal ─── */
+.terminal {
+  background: rgba(5,8,22,0.95);
+  border: 1px solid rgba(0,245,255,0.2);
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  box-shadow: 0 0 40px rgba(0,245,255,0.1), inset 0 0 40px rgba(0,0,0,0.5);
+}
+.terminal-prompt::before {
+  content: '> ';
+  color: var(--primary);
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.cursor-blink {
+  display: inline-block;
+  width: 8px; height: 1.2em;
+  background: var(--primary);
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+  margin-left: 2px;
+}
+
+/* ─── 3D Card Tilt ─── */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease;
+}
+
+/* ─── Holographic ─── */
+@keyframes holoShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.holographic {
+  background: linear-gradient(135deg, rgba(0,245,255,0.1), rgba(110,0,255,0.1), rgba(255,0,170,0.1), rgba(0,245,255,0.1));
+  background-size: 300% 300%;
+  animation: holoShift 4s ease infinite;
+}
+
+/* ─── Magnetic Button ─── */
+.btn-magnetic {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.btn-magnetic::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.btn-magnetic:hover::before { opacity: 0.15; }
+
+/* ─── Scroll indicator ─── */
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(8px); opacity: 0.4; }
+}
+.scroll-indicator { animation: scrollBounce 2s ease-in-out infinite; }
+
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Mobile Overrides ─── */
+@media (max-width: 768px) {
+  .section-inner { padding: 4rem 1.25rem; }
+  body { cursor: auto; }
+  #cursor, #cursor-trail { display: none; }
+}
+
+/* ─── Robotic Scanline Animation ─── */
+@keyframes scanline {
+  0%   { top: 0%; opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
