@@ -6,7 +6,7 @@ import emailjs from '@emailjs/browser';
 import { FiSend, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
 
 // EmailJS Configuration Keys
-const EMAILJS_SERVICE_ID = 'service_8wb7iw5';
+const EMAILJS_SERVICE_ID = 'service_eupcd0n';
 const EMAILJS_TEMPLATE_ID = 'template_8yyyc83';
 const EMAILJS_PUBLIC_KEY = 'e6VLVRnkCAnLgMRZw';
 
