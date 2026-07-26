@@ -39,9 +39,23 @@ export default function Contact() {
     }
   }, [history, step]);
 
+  const [error, setError] = useState('');
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key !== 'Enter' || !current.trim()) return;
-    const key = PROMPTS[step].label as keyof typeof values;
+    const currentLabel = PROMPTS[step].label;
+
+    if (currentLabel === 'email') {
+      const emailVal = current.trim().toLowerCase();
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+      if (!emailRegex.test(emailVal)) {
+        setError('Please enter a valid Gmail address!!!');
+        return;
+      }
+    }
+
+    setError('');
+    const key = currentLabel as keyof typeof values;
     const newValues = { ...values, [key]: current };
     setValues(newValues);
     setHistory((h) => [...h, { q: PROMPTS[step].question, a: current }]);
@@ -80,6 +94,7 @@ export default function Contact() {
     setValues({ name: '', email: '', subject: '', message: '' });
     setCurrent('');
     setHistory([]);
+    setError('');
     setStatus('idle');
   };
 
@@ -155,7 +170,10 @@ export default function Contact() {
                         ref={inputRef}
                         type={PROMPTS[step].label === 'email' ? 'email' : 'text'}
                         value={current}
-                        onChange={(e) => setCurrent(e.target.value)}
+                        onChange={(e) => {
+                          setCurrent(e.target.value);
+                          if (error) setError('');
+                        }}
                         onKeyDown={handleKeyDown}
                         className="flex-1 bg-transparent text-white outline-none caret-primary placeholder-muted/30"
                         placeholder={PROMPTS[step].question}
@@ -163,6 +181,7 @@ export default function Contact() {
                       />
                       <span className="cursor-blink" />
                     </div>
+                    {error && <div className="text-red-400 text-xs mt-1 font-mono">bash: error: {error}</div>}
                     <div className="text-muted/40 text-xs mt-1">Step {step + 1} / {PROMPTS.length} · Press Enter to continue</div>
                   </motion.div>
                 )}
