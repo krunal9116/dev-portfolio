@@ -149,10 +149,10 @@ function CertModal({ cert, onClose }: { cert: ParsedCert; onClose: () => void })
             </button>
         </div>
 
-        {/* Certificate Image / Preview — always scrollable */}
+        {/* Certificate Image / Preview — scrollable vertically & horizontally */}
         <div
           ref={scrollRef}
-          className="w-full p-4 md:p-6 overflow-y-auto overflow-x-hidden"
+          className="w-full p-4 md:p-6 overflow-auto custom-scrollbar"
           style={{ maxHeight: isZoomed ? '75vh' : '60vh' }}
           onWheel={(e) => e.stopPropagation()}
         >
@@ -160,7 +160,7 @@ function CertModal({ cert, onClose }: { cert: ParsedCert; onClose: () => void })
             <img
               src={cert.downloadUrl!}
               alt={cert.title}
-              className={`${isZoomed ? 'w-[180%] max-w-none' : 'w-full'} h-auto rounded-xl drop-shadow-2xl block transition-all duration-300 origin-top-left`}
+              className={`${isZoomed ? 'w-[180%] max-w-none' : 'w-full max-w-full'} h-auto rounded-xl drop-shadow-2xl block transition-all duration-300 origin-top-left`}
             />
           ) : (
             <div className="w-full h-[40vh] flex flex-col items-center justify-center text-muted shrink-0">

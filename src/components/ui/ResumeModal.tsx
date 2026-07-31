@@ -218,10 +218,10 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
               </button>
             </div>
 
-            {/* Resume Image Container (Scrollable) */}
+            {/* Resume Image Container (Scrollable Horizontally & Vertically) */}
             <div
               ref={scrollRef}
-              className="w-full p-4 md:p-6 overflow-y-auto overflow-x-hidden custom-scrollbar"
+              className="w-full p-4 md:p-6 overflow-auto custom-scrollbar"
               style={{ maxHeight: isZoomed ? '88vh' : '78vh' }}
               onWheel={(e) => e.stopPropagation()}
             >
@@ -230,7 +230,7 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
                   src={currentResumePath}
                   alt={`${personalInfo.name}'s Resume`}
                   onError={handleImageError}
-                  className={`${isZoomed ? 'w-[180%] max-w-none' : 'w-full'} h-auto rounded-xl drop-shadow-2xl block transition-all duration-300 origin-top-left`}
+                  className={`${isZoomed ? 'w-[180%] max-w-none' : 'w-full max-w-full'} h-auto rounded-xl drop-shadow-2xl block transition-all duration-300 origin-top-left`}
                 />
               ) : (
                 <div className="w-full h-[50vh] flex flex-col items-center justify-center text-center p-6 space-y-3">
