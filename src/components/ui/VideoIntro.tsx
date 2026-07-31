@@ -10,6 +10,7 @@ export default function VideoIntro({ onComplete }: VideoIntroProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasEnded, setHasEnded] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
   const baseUrl = import.meta.env.BASE_URL || './';
   const videoSrcs = [
@@ -83,13 +84,25 @@ export default function VideoIntro({ onComplete }: VideoIntroProps) {
         playsInline
         preload="auto"
         onEnded={handleEnded}
-        className="w-full h-full object-contain md:object-cover"
+        onCanPlay={() => setIsVideoReady(true)}
+        onWaiting={() => setIsVideoReady(false)}
+        className={`w-full h-full object-contain md:object-cover transition-opacity duration-300 ${
+          isVideoReady ? 'opacity-100' : 'opacity-0'
+        }`}
       >
         {videoSrcs.map((src, idx) => (
           <source key={idx} src={src} type="video/mp4" />
         ))}
         Your browser does not support HTML5 video.
       </video>
+
+      {/* Loading Spinner while video buffers */}
+      {!isVideoReady && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center space-y-4">
+          <div className="w-12 h-12 border-4 border-[#00F5FF]/20 border-t-[#00F5FF] rounded-full animate-spin shadow-[0_0_20px_#00F5FF]" />
+          <p className="text-white/60 font-mono text-xs tracking-widest uppercase">Loading Intro...</p>
+        </div>
+      )}
 
       {/* Subtle overlay gradient */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40 pointer-events-none" />

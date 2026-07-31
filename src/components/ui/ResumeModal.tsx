@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiX, FiMaximize2, FiMinimize2, FiFileText } from 'react-icons/fi';
+import { FiX, FiMaximize2, FiMinimize2, FiFileText, FiDownload } from 'react-icons/fi';
 import { personalInfo } from '../../constants/data';
 import LiquidEther from './LiquidEther';
 
@@ -59,6 +59,64 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
   };
 
   const currentResumePath = RESUME_PATHS[pathIdx];
+
+  const handleDownload = async () => {
+    const fileName = `${personalInfo.name.replace(/\s+/g, '_')}_Resume.jpg`;
+
+    // Detect In-App Browsers (LinkedIn, Instagram, Facebook, Twitter, Line, WeChat, etc.)
+    const ua = navigator.userAgent || navigator.vendor || (window as any).opera || '';
+    const isInAppBrowser = /LinkedInApp|FBAN|FBAV|Instagram|Twitter|MicroMessenger|Snapchat/i.test(ua);
+
+    try {
+      // 1. Fetch asset and convert to Blob
+      const response = await fetch(currentResumePath);
+      const blob = await response.blob();
+
+      // In iOS Safari or LinkedIn in-app browser, blob a[download] is often blocked or ignored.
+      // FileReader dataURL works more reliably across restricted WebViews.
+      if (isInAppBrowser) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const dataUrl = reader.result as string;
+          const link = document.createElement('a');
+          link.href = dataUrl;
+          link.download = fileName;
+          link.target = '_blank';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        };
+        reader.readAsDataURL(blob);
+        return;
+      }
+
+      // Standard Browsers (Chrome, Edge, Firefox, desktop/mobile Safari)
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => window.URL.revokeObjectURL(url), 2000);
+    } catch (err) {
+      console.error('Failed to download resume via Blob:', err);
+      // Fallback 1: Direct link trigger
+      const link = document.createElement('a');
+      link.href = currentResumePath;
+      link.download = fileName;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Fallback 2 for aggressive WebViews: Open directly in window
+      if (isInAppBrowser) {
+        window.open(currentResumePath, '_blank');
+      }
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -139,6 +197,13 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
           >
             {/* Top Bar Buttons */}
             <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
+              <button
+                onClick={handleDownload}
+                title="Download Resume"
+                className="px-3.5 py-2 rounded-xl text-white bg-[#00F5FF]/20 hover:bg-[#00F5FF]/30 hover:border-[#00F5FF]/60 transition-all text-xs font-mono flex items-center gap-2 backdrop-blur-md border border-[#00F5FF]/30 shadow-[0_0_15px_rgba(0,245,255,0.2)]"
+              >
+                <FiDownload size={15} /> Download
+              </button>
               <button
                 onClick={() => setIsZoomed(!isZoomed)}
                 className="px-3.5 py-2 rounded-xl text-white hover:bg-white/10 transition-colors bg-black/60 text-xs font-mono flex items-center gap-2 backdrop-blur-md border border-white/10"
