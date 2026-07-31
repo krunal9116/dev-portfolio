@@ -93,16 +93,16 @@ export default function Experience() {
 
         {/* Timeline */}
         <div ref={timelineRef} className="relative max-w-4xl mx-auto">
-          {/* Central line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-white/5">
+          {/* Central / Mobile-Left line */}
+          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-white/5">
             <div className="exp-line absolute inset-0 bg-gradient-to-b from-primary via-secondary to-accent" style={{ transformOrigin: 'top' }} />
           </div>
 
-          <div className="space-y-16">
+          <div className="space-y-12 md:space-y-16">
             {experiences.map((exp, i) => (
-              <div key={exp.id} className={`relative flex items-start gap-8 ${i % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}>
+              <div key={exp.id} className={`relative flex items-start ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} flex-row pl-10 md:pl-0 md:gap-8`}>
                 {/* Card */}
-                <div className={`exp-card w-full md:w-[calc(50%-2.5rem)] ${i % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
+                <div className={`exp-card w-full md:w-[calc(50%-2.5rem)] text-left ${i % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
                   <div
                     className="glass rounded-2xl p-6 hover:border-white/10 transition-all duration-300 group relative overflow-hidden"
                   >
@@ -133,8 +133,8 @@ export default function Experience() {
                   </div>
                 </div>
 
-                {/* Central node */}
-                <div className="exp-node absolute left-1/2 top-6 -translate-x-1/2 flex items-center justify-center z-10">
+                {/* Node (Left side on mobile, Centered on PC) */}
+                <div className="exp-node absolute left-4 md:left-1/2 top-6 -translate-x-1/2 flex items-center justify-center z-10">
                   <div
                     className="w-4 h-4 rounded-full border-2"
                     style={{ borderColor: exp.color, background: '#050816', boxShadow: `0 0 16px ${exp.color}80` }}

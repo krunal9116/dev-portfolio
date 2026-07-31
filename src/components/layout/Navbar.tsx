@@ -105,7 +105,7 @@ export default function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-40 glass flex flex-col items-center justify-center gap-8 md:hidden"
+            className="fixed inset-0 z-40 bg-[#050816]/95 backdrop-blur-2xl border-l border-white/10 flex flex-col items-center justify-center gap-8 md:hidden"
           >
             {navItems.map((item) => (
               <motion.button
